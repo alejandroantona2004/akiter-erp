@@ -4,11 +4,15 @@ interface CardProps {
   children: ReactNode
   className?: string
   padding?: boolean
+  onClick?: () => void
 }
 
-export function Card({ children, className = '', padding = true }: CardProps) {
+export function Card({ children, className = '', padding = true, onClick }: CardProps) {
   return (
-    <div className={`bg-white rounded-xl border border-gray-200 shadow-sm ${padding ? 'p-6' : ''} ${className}`}>
+    <div
+      onClick={onClick}
+      className={`bg-white rounded-xl border border-gray-200 shadow-sm ${padding ? 'p-6' : ''} ${onClick ? 'cursor-pointer hover:shadow-md hover:border-gray-300 transition-all' : ''} ${className}`}
+    >
       {children}
     </div>
   )
@@ -21,6 +25,7 @@ interface StatCardProps {
   icon: ReactNode
   color?: 'green' | 'gold' | 'blue' | 'red' | 'orange' | 'purple'
   trend?: { value: number; label: string }
+  onClick?: () => void
 }
 
 const colorMap = {
@@ -32,10 +37,10 @@ const colorMap = {
   purple: { bg: 'bg-purple-50', icon: 'text-purple-700', badge: 'bg-purple-600' },
 }
 
-export function StatCard({ title, value, subtitle, icon, color = 'green', trend }: StatCardProps) {
+export function StatCard({ title, value, subtitle, icon, color = 'green', trend, onClick }: StatCardProps) {
   const colors = colorMap[color]
   return (
-    <Card>
+    <Card onClick={onClick}
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm text-gray-500 font-medium">{title}</p>

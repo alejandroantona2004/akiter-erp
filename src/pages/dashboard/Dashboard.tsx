@@ -2,6 +2,7 @@ import {
   Users, FileText, Briefcase, Receipt,
   TrendingUp, Clock, CheckCircle, AlertTriangle,
 } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { StatCard } from '../../components/ui/Card'
 import { Badge } from '../../components/ui/Badge'
 import { useAuthStore } from '../../store/authStore'
@@ -16,13 +17,14 @@ const statusColors = {
 }
 
 const pendingTasks = [
-  { id: 1, title: 'Revisar presupuestos pendientes de firma', priority: 'alta', due: 'Hoy' },
-  { id: 2, title: 'Actualizar partes de trabajo sin firmar', priority: 'media', due: 'Esta semana' },
-  { id: 3, title: 'Verificar facturas próximas a vencer', priority: 'baja', due: 'Esta semana' },
+  { id: 1, title: 'Revisar presupuestos pendientes de firma', priority: 'alta', due: 'Hoy', path: '/presupuestos' },
+  { id: 2, title: 'Actualizar partes de trabajo sin firmar', priority: 'media', due: 'Esta semana', path: '/partes-trabajo' },
+  { id: 3, title: 'Verificar facturas próximas a vencer', priority: 'baja', due: 'Esta semana', path: '/facturacion' },
 ]
 
 export function Dashboard() {
   const { user, hasPermission } = useAuthStore()
+  const navigate = useNavigate()
 
   const currentMonth = new Date().toISOString().slice(0, 7)
 
@@ -75,6 +77,7 @@ export function Dashboard() {
             value={clientes.length.toString()}
             icon={<Users size={22} />}
             color="green"
+            onClick={() => navigate('/crm')}
           />
         )}
         {hasPermission('presupuestos') && (
@@ -84,6 +87,7 @@ export function Dashboard() {
             subtitle="Pendientes de firma"
             icon={<FileText size={22} />}
             color="gold"
+            onClick={() => navigate('/presupuestos')}
           />
         )}
         {hasPermission('proyectos') && (
@@ -92,6 +96,7 @@ export function Dashboard() {
             value={proyectosActivos.length.toString()}
             icon={<Briefcase size={22} />}
             color="blue"
+            onClick={() => navigate('/proyectos')}
           />
         )}
         {(hasPermission('facturacion') || hasPermission('cobros')) && (
@@ -100,6 +105,7 @@ export function Dashboard() {
             value={fmtEuro(facturacionMes)}
             icon={<Receipt size={22} />}
             color="purple"
+            onClick={() => navigate('/facturacion')}
           />
         )}
         {hasPermission('partes_trabajo') && !hasPermission('clientes') && (
@@ -109,6 +115,7 @@ export function Dashboard() {
             subtitle="Sin firmar"
             icon={<Clock size={22} />}
             color="orange"
+            onClick={() => navigate('/partes-trabajo')}
           />
         )}
         {hasPermission('proyectos') && !hasPermission('clientes') && (
@@ -117,6 +124,7 @@ export function Dashboard() {
             value={proyectosActivos.length.toString()}
             icon={<Briefcase size={22} />}
             color="blue"
+            onClick={() => navigate('/proyectos')}
           />
         )}
       </div>
@@ -132,7 +140,7 @@ export function Dashboard() {
           {hasPermission('facturacion') && recentFacturas.length > 0 ? (
             <div className="divide-y divide-gray-50">
               {recentFacturas.map(f => (
-                <div key={f.id} className="flex items-center gap-4 p-4 hover:bg-gray-50 transition-colors">
+                <div key={f.id} className="flex items-center gap-4 p-4 hover:bg-gray-50 transition-colors cursor-pointer" onClick={() => navigate('/facturacion')}>
                   <div className="w-8 h-8 rounded-full bg-[#f0f7f3] flex items-center justify-center flex-shrink-0">
                     <Receipt size={14} className="text-[#1a4a2e]" />
                   </div>
@@ -181,7 +189,7 @@ export function Dashboard() {
           </div>
           <div className="p-4 space-y-3">
             {pendingTasks.map(task => (
-              <div key={task.id} className="flex items-start gap-3 p-3 rounded-lg border border-gray-100 hover:border-[#1a4a2e]/30 transition-colors cursor-pointer">
+              <div key={task.id} className="flex items-start gap-3 p-3 rounded-lg border border-gray-100 hover:border-[#1a4a2e]/30 transition-colors cursor-pointer" onClick={() => navigate(task.path)}>
                 <div className="mt-0.5">
                   {task.priority === 'alta' ? (
                     <AlertTriangle size={14} className="text-red-500" />

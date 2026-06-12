@@ -40,7 +40,7 @@ const colorMap = {
 export function StatCard({ title, value, subtitle, icon, color = 'green', trend, onClick }: StatCardProps) {
   const colors = colorMap[color]
   return (
-    <Card onClick={onClick}
+    <Card onClick={onClick}>
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm text-gray-500 font-medium">{title}</p>
